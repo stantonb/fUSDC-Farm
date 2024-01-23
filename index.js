@@ -6,7 +6,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(API_URL));
 
 async function main() {
 	const airdropAccount1 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_1);
-	const airdropAccount2 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_2);
+	// const airdropAccount2 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_2);
 
 	var outboundTransaction = {
 		"from": airdropAccount1.address,
@@ -16,7 +16,8 @@ async function main() {
 		"chainId": CHAIN_ID
 	  };
 
-	await sendTxn(outboundTransaction);
+	  console.log(outboundTransaction);
+	// await sendTxn(outboundTransaction);
 
 	// var inboundTransaction = {
 	// 	"from": airdropAccount2.address,
