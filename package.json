@@ -1,0 +1,23 @@
+{
+  "name": "fusdc-farm",
+  "version": "1.0.0",
+  "description": "Send Txn's between wallets",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stantonb/fUSDC-Farm.git"
+  },
+  "author": "Stanton Borthwick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stantonb/fUSDC-Farm/issues"
+  },
+  "homepage": "https://github.com/stantonb/fUSDC-Farm#readme",
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "web3": "^4.4.0"
+  }
+}
