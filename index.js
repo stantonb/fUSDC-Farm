@@ -8,16 +8,23 @@ async function main() {
 	const airdropAccount1 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_1);
 	// const airdropAccount2 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_2);
 
-	var outboundTransaction = {
+	let outboundTransaction = {
 		"from": airdropAccount1.address,
 		"to": "0x993Ead125EdC8cCB472a9ff6832FfeDC75d34Bdf",
-		"value": web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-		"gas": 200000,
 		"chainId": CHAIN_ID
-	  };
+	};
 
-	  console.log(outboundTransaction);
-	// await sendTxn(outboundTransaction);
+	let gasPrice = await web3.eth.getGasPrice();
+	console.log("Gas price: ", gasPrice);
+
+	let estimateGas = await web3.eth.estimateGas(outboundTransaction);
+	console.log("Estimate gas: ", estimateGas);
+
+	outboundTransaction.gasPrice = gasPrice;
+	outboundTransaction.gas = estimateGas;
+	console.log(outboundTransaction);
+
+	await sendTxn(airdropAccount1, outboundTransaction);
 
 	// var inboundTransaction = {
 	// 	"from": airdropAccount2.address,
@@ -30,8 +37,8 @@ async function main() {
 	// await sendTxn(inboundTransaction);
 }
 
-async function sendTxn(txn) {
-	airdropAccount1.signTransaction(txn)
+async function sendTxn(account, txn) {
+	account.signTransaction(txn)
 		.then(signedTx => {
 			web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 		})

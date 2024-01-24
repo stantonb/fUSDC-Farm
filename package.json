@@ -1,6 +1,7 @@
 {
   "name": "fusdc-farm",
   "version": "1.0.0",
+  "type": "module",
   "description": "Send Txn's between wallets",
   "main": "index.js",
   "scripts": {
