@@ -1,7 +1,9 @@
 import "dotenv/config.js";
 import { Web3 } from 'web3';
 
-const { API_URL, PRIVATE_KEY_WALLET_1, PRIVATE_KEY_WALLET_2, CHAIN_ID } = process.env;
+const debug = false;
+const runNumber = 1;
+const { API_URL, PRIVATE_KEY_WALLET_1, PRIVATE_KEY_WALLET_2, CHAIN_ID, CONTRACT_ADDRESS } = process.env;
 const web3 = new Web3(new Web3.providers.HttpProvider(API_URL));
 
 async function main() {
@@ -11,7 +13,7 @@ async function main() {
 	console.log("Airdrop account 1: ", airdropAccount1.address);
 	console.log("Airdrop account 2: ", airdropAccount2.address);
 
-	sendERC20Token(airdropAccount1, airdropAccount2);
+	await sendERC20Token(airdropAccount1, airdropAccount2);
 }
 
 async function sendERC20Token(airdropAccount1, airdropAccount2) {
@@ -422,30 +424,27 @@ async function sendERC20Token(airdropAccount1, airdropAccount2) {
 		}
 	  ];
 	const amount = "100";
-	const myContract = new web3.eth.Contract(abi, "0x0878E5F7F3aEcE95D959377152BB4A633040007D");
-    const gasPrice = await web3.eth.getGasPrice();
+	const myContract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
+	const gasPrice = await web3.eth.getGasPrice();
 
-    const tx = {
-        // from: airdropAccount1.address,
-        to: "0x0878E5F7F3aEcE95D959377152BB4A633040007D", // Contract address
-        // gas: gasEstimate,
-        gasPrice: gasPrice,
-        // data: data,
-        chainId: CHAIN_ID
-    };
+	const tx = {
+		to: CONTRACT_ADDRESS, // Contract address
+		gasPrice: gasPrice,
+		chainId: CHAIN_ID
+	};
 
 	tx.from = airdropAccount1.address;
 	tx.data = myContract.methods.transfer(airdropAccount2.address, web3.utils.toWei(amount, 'ether')).encodeABI();
 	tx.gas = await myContract.methods.transfer(airdropAccount2.address, web3.utils.toWei(amount, 'ether')).estimateGas({ from: airdropAccount1.address });
 
-	console.log(tx);
+	console.log(debug ? tx : "");
 	await sendTxn(airdropAccount1, tx);
 
 	tx.from = airdropAccount2.address;
 	tx.data = myContract.methods.transfer(airdropAccount1.address, web3.utils.toWei(amount, 'ether')).encodeABI();
 	tx.gas = await myContract.methods.transfer(airdropAccount1.address, web3.utils.toWei(amount, 'ether')).estimateGas({ from: airdropAccount2.address });
 	
-	console.log(tx);
+	console.log(debug ? tx : "");
 	await sendTxn(airdropAccount2, tx);
 }
 
@@ -472,10 +471,12 @@ async function sendEth(){
 
 async function sendTxn(account, txn) {
 	const signedTransaction = await web3.eth.accounts.signTransaction(txn, account.privateKey);
-	console.log("Signed transaction: ", signedTransaction);
-	const txReceipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
+	console.log("Signed transaction: ", debug ? signedTransaction : "done");
 
-	console.log("Transaction hash: ", txReceipt);
+	const txReceipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
+	console.log("Transaction hash: ", debug ? txReceipt : txReceipt.transactionHash);
 }
 
-main();
+for (let i = 0; i < runNumber; i++) {
+	await main();
+}
