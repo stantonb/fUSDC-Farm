@@ -17,7 +17,7 @@ async function main() {
 }
 
 async function sendERC20Token(airdropAccount1, airdropAccount2) {
-	const amount = "0.000000001035"; // 294 usdc
+	const amount = "0.000000001035"; // 1035 usdc
 	const abi = abiImport.default;
 	const myContract = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
