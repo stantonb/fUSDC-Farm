@@ -4,15 +4,17 @@ import { Web3 } from 'web3';
 import * as abiImport from './ABI/fUSDC.json' with { type: "json" };
 
 const debug = false;
-const runNumber = 19;
-const { API_URL, PRIVATE_KEY_WALLET_1, PRIVATE_KEY_WALLET_2, PRIVATE_KEY_WALLET_3, CHAIN_ID, CONTRACT_ADDRESS } = process.env;
+const runNumber = 1;
+const { API_URL, PRIVATE_KEY_WALLET_1, PRIVATE_KEY_WALLET_2, PRIVATE_KEY_WALLET_3, PRIVATE_KEY_WALLET_4, CHAIN_ID, CONTRACT_ADDRESS } = process.env;
 const web3 = new Web3(new Web3.providers.HttpProvider(API_URL));
 const airdropAccount1 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_1);
 const airdropAccount2 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_2);
 const airdropAccount3 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_3);
+const airdropAccount4 = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY_WALLET_4);
 console.log("Airdrop account 1: ", airdropAccount1.address);
 console.log("Airdrop account 2: ", airdropAccount2.address);
 console.log("Airdrop account 2: ", airdropAccount3.address);
+console.log("Airdrop account 2: ", airdropAccount4.address);
 
 async function main() {
 	await sendERC20Token();
@@ -38,8 +40,13 @@ async function sendERC20Token() {
 
 	await randomSleep();
 	
-	tx = await setUpTxn(myContract, airdropAccount3.address, airdropAccount1.address, amount);
+	tx = await setUpTxn(myContract, airdropAccount3.address, airdropAccount4.address, amount);
 	await sendTxn(airdropAccount3, tx);
+
+	await randomSleep();
+	
+	tx = await setUpTxn(myContract, airdropAccount4.address, airdropAccount1.address, amount);
+	await sendTxn(airdropAccount4, tx);
 }
 
 async function setUpTxn(myContract, from, to, amount) {
@@ -82,9 +89,9 @@ async function sendTxn(account, txn) {
 
 async function randomSleep() {
 	//sleep for between 20 seconds and 4 minutes
-	let sleepTime = Math.floor(Math.random() * 120) + 10;
-	console.log("Sleeping for " + sleepTime + " seconds");
-	await new Promise(r => setTimeout(r, sleepTime * 1000));
+	// let sleepTime = Math.floor(Math.random() * 120) + 10;
+	// console.log("Sleeping for " + sleepTime + " seconds");
+	// await new Promise(r => setTimeout(r, sleepTime * 1000));
 }
 
 for (let i = 0; i < runNumber; i++) {
