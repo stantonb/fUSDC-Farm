@@ -89,9 +89,9 @@ async function sendTxn(account, txn) {
 
 async function randomSleep() {
 	//sleep for between 20 seconds and 4 minutes
-	// let sleepTime = Math.floor(Math.random() * 120) + 10;
-	// console.log("Sleeping for " + sleepTime + " seconds");
-	// await new Promise(r => setTimeout(r, sleepTime * 1000));
+	let sleepTime = Math.floor(Math.random() * 120) + 10;
+	console.log("Sleeping for " + sleepTime + " seconds");
+	await new Promise(r => setTimeout(r, sleepTime * 1000));
 }
 
 for (let i = 0; i < runNumber; i++) {
